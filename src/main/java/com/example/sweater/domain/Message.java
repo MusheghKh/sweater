@@ -1,11 +1,14 @@
 package com.example.sweater.domain;
 
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Message {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -13,67 +16,22 @@ public class Message {
 
     @NotBlank(message = "Please fill message")
     @Length(max = 2048, message = "Message too long (more than 2KB)")
+    @NonNull
     private String text;
 
     @Length(max = 2048, message = "Tag too long (more than 255)")
+    @NonNull
     private String tag;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @NonNull
     private User author;
 
+    @Setter
     private String filename;
 
-    public Message() {
-    }
-
-    public Message(String text, String tag, User author) {
-        this.text = text;
-        this.tag = tag;
-        this.author = author;
-    }
-
     public String getAuthorName() {
-        return author != null ? author.getUsername() : "<none>";
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
+        return author.getUsername();
     }
 }
